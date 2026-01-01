@@ -5,13 +5,16 @@ name: GithubPacakgesCICD
 # separate terms of service, privacy policy, and support
 # documentation.
 
+# Workflow disabled - uncomment the 'on:' section below to re-enable
+# on:
+#   schedule:
+#     - cron: "18 5 * * *"
+#   push:
+#     branches: ["master"]
+#     # Publish semver tags as releases.
+#     tags: ["v*.*.*"]
 on:
-  schedule:
-    - cron: "18 5 * * *"
-  push:
-    branches: ["master"]
-    # Publish semver tags as releases.
-    tags: ["v*.*.*"]
+  workflow_dispatch: # Only allow manual runs
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
@@ -20,6 +23,8 @@ env:
 
 jobs:
   build:
+    # Workflow is disabled - change workflow_dispatch to push/schedule to re-enable
+    if: false # This prevents the job from running
     runs-on: ubuntu-latest
     permissions:
       contents: read
