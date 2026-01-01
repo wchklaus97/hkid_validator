@@ -26,3 +26,4 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           repository: klaus97hk/hkid_validator
           tags: latest, ${{ github.run_number}}
+
