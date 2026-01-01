@@ -2,9 +2,7 @@
 [![DockerCICD](https://github.com/wchklaus97/hkid_validator/actions/workflows/docker-cicd.yml/badge.svg)](https://github.com/wchklaus97/hkid_validator/actions/workflows/docker-cicd.yml)
 [![ForkCICD](https://github.com/wchklaus97/hkid_validator/actions/workflows/fork-cicd.yml/badge.svg)](https://github.com/wchklaus97/hkid_validator/actions/workflows/fork-cicd.yml)
 [![GitHubPageCICD](https://github.com/wchklaus97/hkid_validator/actions/workflows/github-page-cicd.yml/badge.svg)](https://github.com/wchklaus97/hkid_validator/actions/workflows/github-page-cicd.yml)
-[![GithubPacakgesCICD](https://github.com/wchklaus97/hkid_validator/actions/workflows/github-packages-cicd.yml/badge.svg)](https://github.com/wchklaus97/hkid_validator/actions/workflows/github-packages-cicd.yml)
 [![pages-build-deployment](https://github.com/wchklaus97/hkid_validator/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/wchklaus97/hkid_validator/actions/workflows/pages/pages-build-deployment)
-[![CodeFactor](https://www.codefactor.io/repository/github/wchklaus97/hkid_validator/badge)](https://www.codefactor.io/repository/github/wchklaus97/hkid_validator)
 
 HKID Validator Library, support HKID Validation and generated eight or nine digits validated HKID.
 
