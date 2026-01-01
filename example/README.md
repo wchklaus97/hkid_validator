@@ -56,7 +56,23 @@ Storage:
   - ValidatedID
 
 ## Localhost Running
-$ flutter run --web-renderer html --no-sound-null-safety --dart-define=ENV=DEV -dart-define=FLUTTER_WEB_USE_SKIA=true -d chrome --release
+
+### Development Mode
+```bash
+flutter run -d chrome --dart-define=ENV=DEV
+```
+
+### Production Mode with WASM (Recommended)
+```bash
+flutter run -d chrome --release --wasm --dart-define=ENV=PROD
+```
+
+### Production Build with WASM
+```bash
+flutter build web --wasm --dart-define=ENV=PROD --release
+```
+
+**Note:** WASM builds provide significantly better performance with near-native execution speeds. Requires Flutter 3.24+ and modern browsers (Chrome 119+, Firefox 120+, Safari 17.4+).
 
 
 # HKID Validator Demo

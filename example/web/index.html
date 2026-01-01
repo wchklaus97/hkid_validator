@@ -26,9 +26,6 @@
   <link rel="icon" type="image/png" sizes="32x32" src="assets/favicon.png"/>
   <link href="assets/manifest.json" type="application/json"/>
 
-  <script>
-    var serviceWorkerVersion = null;
-  </script>
   <style>
     .container {
       margin: 0;
@@ -46,25 +43,45 @@
     <img src="assets/loading.gif">
   </div>
  
-  <script src="main.dart.js" type="application/javascript"></script>
-  <script src="flutter_service_worker.js" type="application/javascript"></script></head>
-  <script src="flutter.js" type="application/javascript"></script>
-
+  <!-- Load Flutter bootstrap script (handles both JS and WASM builds) -->
+  <script src="flutter_bootstrap.js" type="application/javascript"></script>
+  
   <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
+    // Remove loader when Flutter app is ready
+    // flutter_bootstrap.js automatically initializes Flutter
+    (function() {
+      var webLoader = document.getElementById("loader");
+      
+      function removeLoader() {
+        if (webLoader && webLoader.parentNode) {
+          webLoader.remove();
         }
-      }).then(function(engineInitializer) {
-        return engineInitializer.initializeEngine();
-      }).then(function(appRunner) {
-        var webLoader = document.getElementById("loader");
-        webLoader.remove();
-        return appRunner.runApp();
+      }
+      
+      // Wait for Flutter to initialize and app to render
+      // Check for Flutter app root element (flt-glass-pane or flt-scene-host)
+      function waitForFlutterApp() {
+        var flutterApp = document.querySelector('flt-glass-pane') || 
+                        document.querySelector('flt-scene-host') ||
+                        document.querySelector('flt-semantics-host');
+        
+        if (flutterApp) {
+          removeLoader();
+        } else {
+          // Retry after a short delay
+          setTimeout(waitForFlutterApp, 100);
+        }
+      }
+      
+      // Start checking after page loads
+      window.addEventListener('load', function() {
+        // Give Flutter a moment to initialize
+        setTimeout(waitForFlutterApp, 500);
+        
+        // Fallback: Remove loader after max wait time
+        setTimeout(removeLoader, 3000);
       });
-    });
+    })();
   </script>
 </body>
 </html>
