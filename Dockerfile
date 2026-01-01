@@ -17,7 +17,9 @@ RUN flutter doctor -v
 COPY . /usr/local/bin/app/
 WORKDIR /usr/local/bin/app/example
 RUN flutter pub get
-RUN flutter build web --web-renderer html --no-sound-null-safety --dart-define=ENV=PROD -dart-define=FLUTTER_WEB_USE_SKIA=true --release
+# Note: Using JS build instead of WASM because sembast_web (IndexedDB) 
+# doesn't support WASM yet. Remove --wasm flag for now.
+RUN flutter build web --dart-define=ENV=PROD --release
 
 # Stage 2
 FROM nginx:stable-alpine

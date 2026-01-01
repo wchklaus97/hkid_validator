@@ -1,7 +1,6 @@
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
 import 'package:flutter/material.dart';
+import 'package:web/web.dart' as web;
 import 'package:get/get.dart';
 import 'package:hkid_validator_web_demo/models/record/generated_record.dart';
 import 'package:hkid_validator_web_demo/ser/google_font_ser.dart';
@@ -31,11 +30,10 @@ class GeneratedRecordWidget extends StatelessWidget {
       }
       final List<int> bytes = workbook.saveAsStream();
       workbook.dispose();
-      AnchorElement(
-          href:
-              'data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}')
-        ..setAttribute('download', 'generatedHKID.xlsx')
-        ..click();
+      final anchor = web.HTMLAnchorElement()
+        ..href = 'data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}'
+        ..setAttribute('download', 'generatedHKID.xlsx');
+      anchor.click();
     }
   }
 

@@ -4,17 +4,36 @@ import 'package:hkid_validator_web_demo/ser/indexeddb/generateddb_ser.dart';
 import 'package:hkid_validator_web_demo/ser/indexeddb/sysdb_ser.dart';
 import 'package:hkid_validator_web_demo/ser/indexeddb/validateddb_ser.dart';
 import 'package:sembast/sembast.dart';
-import 'package:sembast_web/sembast_web.dart';
+import 'package:sembast_web/sembast_web.dart' as sembast_web;
 
 class IndexedDBSer {
   static final IndexedDBSer _ser = IndexedDBSer._internal();
   factory IndexedDBSer() => _ser;
   IndexedDBSer._internal() {
-    _dbFactory = databaseFactoryWeb;
+    // For WASM builds, sembast_web's databaseFactoryWeb throws UnimplementedError
+    // We'll catch it at initialization time and handle it gracefully
+    _dbFactory = _getDatabaseFactory();
     _dbStore = intMapStoreFactory.store("records");
     _sysDBSer = SysDBSer();
     _generatedDBSer = GeneratedDBSer();
     _validatedDBSer = ValidatedDBSer();
+  }
+
+  DatabaseFactory _getDatabaseFactory() {
+    // Try to use sembast_web's factory
+    // In WASM builds, this will throw UnimplementedError immediately
+    try {
+      return sembast_web.databaseFactoryWeb;
+    } on UnimplementedError {
+      // WASM build detected - sembast_web doesn't support WASM
+      throw UnsupportedError(
+        'IndexedDB storage is not available in WASM builds.\n\n'
+        'sembast_web requires dart:html which is incompatible with WebAssembly.\n\n'
+        'To fix this:\n'
+        '1. Use JavaScript build: flutter build web (without --wasm flag)\n'
+        '2. Or remove --wasm from CI/CD workflows',
+      );
+    }
   }
 
   late DatabaseFactory _dbFactory;
@@ -31,8 +50,21 @@ class IndexedDBSer {
     required String name,
     required int dbVersion,
   }) async {
-    Database db = await _dbFactory.openDatabase(name, version: dbVersion);
-    return DBSer.client(name, dbVersion, db, _dbFactory, _dbStore);
+    try {
+      Database db = await _dbFactory.openDatabase(name, version: dbVersion);
+      return DBSer.client(name, dbVersion, db, _dbFactory, _dbStore);
+    } on UnimplementedError {
+      // WASM build - sembast_web doesn't support it
+      // sembast_web uses dart:html which is not available in WASM
+      throw UnsupportedError(
+        'IndexedDB storage is not available in WASM builds because sembast_web '
+        'requires dart:html which is incompatible with WebAssembly.\n\n'
+        'Solutions:\n'
+        '1. Use JavaScript build: flutter build web (without --wasm flag)\n'
+        '2. Wait for sembast_web WASM support\n'
+        '3. Use a WASM-compatible storage solution',
+      );
+    }
   }
 
   Future<void> _initDBClient({

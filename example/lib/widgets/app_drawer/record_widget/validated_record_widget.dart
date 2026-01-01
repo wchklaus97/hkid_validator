@@ -6,8 +6,7 @@ import 'package:hkid_validator_web_demo/ser/google_font_ser.dart';
 import 'package:hkid_validator_web_demo/ser/indexeddb/indexeddb_ser.dart';
 import 'package:hkid_validator_web_demo/widgets/common/copied_text_widget.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xls;
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
+import 'package:web/web.dart' as web;
 
 class ValidatedRecordWidget extends StatelessWidget {
   const ValidatedRecordWidget({Key? key}) : super(key: key);
@@ -35,11 +34,10 @@ class ValidatedRecordWidget extends StatelessWidget {
       }
       final List<int> bytes = workbook.saveAsStream();
       workbook.dispose();
-      AnchorElement(
-          href:
-              'data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}')
-        ..setAttribute('download', 'validatedHKID.xlsx')
-        ..click();
+      final anchor = web.HTMLAnchorElement()
+        ..href = 'data:application/octet-stream;charset=utf-16le;base64,${base64.encode(bytes)}'
+        ..setAttribute('download', 'validatedHKID.xlsx');
+      anchor.click();
     }
   }
 
